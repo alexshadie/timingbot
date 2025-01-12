@@ -1,0 +1,11 @@
+.idea
+*.iml
+
+*.log
+.env
+*.list
+
+build/*
+*.tsbuildinfo
+
+node_modules/

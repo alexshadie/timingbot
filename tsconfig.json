@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "resolveJsonModule": true,
+        "incremental": true,
+        "target": "es6",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "outDir": "./build",
+        "sourceRoot": "./src",
+        "rootDir": "./src",
+        "module": "commonjs",
+        "forceConsistentCasingInFileNames": true,
+        "preserveConstEnums": true,
+        "inlineSourceMap": true,
+        "declaration": true,
+        "declarationMap": true,
+        "experimentalDecorators": true,
+        "preserveSymlinks": true,
+        "allowJs": true,
+        "checkJs": false
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts",
+        "test"
+    ]
+}

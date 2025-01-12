@@ -1,0 +1,24 @@
+{
+    "name": "timingbot",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "bot": "node build/telegram-bot.js"
+    },
+    "dependencies": {
+        "dotenv": "^16.4.7",
+        "googleapis": "^144.0.0",
+        "minimist": "^1.2.8",
+        "module-alias": "^2.2.3",
+        "telegraf": "^4.16.3",
+        "typescript": "^5.7.2"
+    },
+    "devDependencies": {
+        "@types/node": "^22.10.1",
+        "@types/minimist": "^1.2.5"
+    },
+    "author": "",
+    "license": "ISC",
+    "description": ""
+}
