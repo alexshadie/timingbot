@@ -18,7 +18,15 @@ class Log {
     }
 
     info(...data: any[]): void {
-        console.log("[INFO]", ...data)
+        console.log("[INF]", ...data)
+    }
+
+    warn(...data: any[]): void {
+        console.log("[WRN]", ...data)
+    }
+
+    error(...data: any[]): void {
+        console.error("[ERR]", ...data)
     }
 }
 

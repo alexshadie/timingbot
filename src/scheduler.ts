@@ -1,4 +1,4 @@
-import {log} from "./lib";
+import {log} from "./app";
 
 type Task = {
     time: string; // Format: "HH:mm", e.g., "14:30"
@@ -52,7 +52,7 @@ class Scheduler {
                     log.info(`Executing task scheduled for ${task.time}`);
                     await task.callback(); // Await the async callback
                 } catch (error) {
-                    console.error(`Error executing task at ${task.time}:`, error);
+                    log.error(`Error executing task at ${task.time}:`, error);
                 }
             }
         }
