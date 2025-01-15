@@ -1,12 +1,23 @@
+import {Note} from "./models/note";
+
 require('module-alias/register')
 import {Telegraf} from "telegraf";
 import type {User, Chat} from "@telegraf/types/manage"
 import {Scheduler, Task} from "./scheduler"
 import {argv, log} from "./lib";
 import * as fs from 'fs';
+import {AppDataSource} from "./data-source";
 require('dotenv').config()
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN || "")
+const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
+    timeZone: 'Asia/Dubai',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+});
 
 const channels = (process.env.USERS || "").split(",").map((n: string) => parseInt(n))
 // Currently hardcoded to two users only
@@ -71,7 +82,7 @@ const initScheduler = (): Scheduler => {
     return s
 }
 
-const main = async () => {
+const run = async () => {
     if (argv.msg) {
         await bot.telegram.sendMessage(at, argv.msg)
         return
@@ -89,6 +100,22 @@ const main = async () => {
         await ctx.telegram.sendMessage(ctx.message.chat.id, `Started`)
     })
 
+    bot.command("notes", async (ctx) => {
+        const noteRepository = AppDataSource.getRepository(Note);
+        const userId = ctx.message.from.id
+        // Fetch all notes for the specified user_id
+        const notes = await noteRepository.find({
+            where: { user: userId },
+            order: {ts: "asc"}
+        });
+        const text = notes.map((note) => {
+            const date = dateFormatter.format(new Date(note.ts))
+            return `${date} ${note.text}`;
+        })
+        await ctx.telegram.sendMessage(ctx.message.chat.id, text.join("\n"))
+        console.log(`Notes for user ${userId}:`, notes);
+    })
+
     bot.on("message", async (ctx) => {
         log.debug("Hello")
         if (!checkSender(ctx)) return
@@ -100,6 +127,13 @@ const main = async () => {
                 console.log(getChatCaption(ctx.message.chat))
             }
             console.log(ctx.message.text)
+            const note = new Note()
+            note.user = ctx.message.from.id
+            note.text = ctx.message.text
+            note.ts = (new Date()).toUTCString()
+            const entityManager = AppDataSource.manager;
+            await entityManager.save(note);
+            console.log('Note saved:', note);
         }
         // await ctx.telegram.sendMessage(ctx.message.chat.id, `I'm here`)
     })
@@ -113,5 +147,5 @@ const main = async () => {
     process.once('SIGTERM', () => {bot.stop('SIGTERM'); scheduler.stop()})
 }
 
-main()
+export default run
 
